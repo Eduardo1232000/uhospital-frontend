@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+        <head>
+                <meta charset="UTF-8" />
+                <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                <title>UHospital - Admin</title>
+                <link
+                       rel="stylesheet"
+                       href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+                       integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+                       crossorigin="anonymous"
+               />
+        </head>
+        <body>
+                <nav class="navbar navbar-dark bg-dark mb-5">
+                        <a class="navbar-brand" href="#">
+                                <img
+                                       src="./assets/hospital.jpg"
+                                       width="30"
+                                       height="30"
+                                       class="d-inline-block align-top"
+                                       alt=""
+                               />
+                                UHospital
+                        </a>
+                </nav>
+                <div class="container">
+                        <div class="d-flex justify-content-end">
+                                <button 
+                                  id="go_admin" 
+                                  type="submit" 
+                                  class="btn btn-primary ">
+                                    back
+                                  </button>
+                              </div>
+                        <h1 class="text-center mb-5">Ver todas las consultas</h1>
+                        <p id="currentUser"></p>
+
+                        <div class="d-flex flex-column" id="citas"></div>
+                </div>
+                <script>
+                        //getting URL parameters
+                        const queryStrings = window.location.search;
+                        const urlParams = new URLSearchParams(queryStrings);
+                        const firstName = urlParams.get("first_name");
+                        const lastName = urlParams.get("last_name");
+ 
+                        //getting inputs
+                        let currentUser = document.getElementById("currentUser");
+                        let doctors = document.getElementById("doctors");
+
+
+ 
+                        //getting doctors
+                        getCita();
+                        function getCita() {
+                                fetch("https://uhospitalipcb1.herokuapp.com/consulta")
+                                        .then((response) => response.json())
+                                        .then((data) => {
+                                                citas.innerHTML = "";
+                                                data.forEach((cita) => {
+                                                  if(cita.doctor==usuario){
+                                                          
+                                                                let card = document.createElement("div");
+                                                        card.className = "card text-white bg-info mb-3";
+                                                        card.id = cita.reason;
+                                                        let cardBody = document.createElement("div");
+                                                        cardBody.className = "card-body";
+                                                        let cita_reason = document.createElement("h5");
+                                                        cita_reason.className = "card-title";
+                                                        cita_reason.innerText ="Motivo: "+ cita.reason;
+                                                        let cita_date = document.createElement("p");
+                                                        cita_date.className = "card-subtitle";
+                                                        cita_date.innerText = "Fecha: " + cita.date;
+                                                        let cita_hour = document.createElement("p");
+                                                        cita_hour.className = "card-subtitle";
+                                                        cita_hour.innerText = "Hora: " + cita.hour;
+
+
+                                                        let check = document.createElement("div");
+                                                        check.className = "form-check";
+                                                        let checkinput = document.createElement("input");
+                                                        checkinput.className = "form-check-input"; 
+                                                        checkinput.type = "checkbox";
+                                                        checkinput.id="completocheck";
+                                                        checkinput.disabled = true;
+                                                        if(cita.estado == "completada"){
+                                                                checkinput.checked =true;  
+                                                        }
+                                                        
+                                                        let checklabel = document.createElement("label");
+                                                        checklabel.className = "form-check-label";
+                                                        checklabel.innerText = "completada";
+                                                        check.appendChild(checkinput);
+                                                        check.appendChild(checklabel);
+
+
+
+
+                                                      
+
+
+                                                        cardBody.appendChild(cita_reason);
+                                                        cardBody.appendChild(cita_date);
+                                                        cardBody.appendChild(cita_hour);
+                                                        cardBody.appendChild(check);
+
+                                                        card.appendChild(cardBody);
+                                                        citas.appendChild(card);     
+                                                          
+
+                                                          
+
+                                                  }
+
+                                                });
+                                        })
+                                        .catch((error) => console.error(error));
+                        }
+ 
+                        
+                </script>
+
+                <script>
+                        let log_out_Button = document.getElementById("go_admin");
+                        log_out_Button.addEventListener("click", (e) => {
+                       
+                        window.location="doctor.html";
+                        });
+                </script>
+                  <script>
+                    let usuario= localStorage.getItem("user")
+                    let password_user= localStorage.getItem("password_user")
+                    let first_name_user= localStorage.getItem("first_name_user")
+                    let last_name_user= localStorage.getItem("last_name_user")
+                    let date_user= localStorage.getItem("date_user")
+                    let gender_user= localStorage.getItem("gender_user")
+                    let specialty_user= localStorage.getItem("specialty_user")
+                    let phone_user= localStorage.getItem("phone_user")
+                    console.log(usuario)
+                    console.log(password_user)
+                    console.log(first_name_user)
+                    console.log(last_name_user)
+                    console.log(date_user)
+                    console.log(gender_user)
+                    console.log(specialty_user)
+                    console.log(phone_user)
+                  </script>
+
+                <script
+                       src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+                       integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+                       crossorigin="anonymous"
+               ></script>
+                <script
+                       src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+                       integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+                       crossorigin="anonymous"
+               ></script>
+                <script
+                       src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+                       integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+                       crossorigin="anonymous"
+               ></script>
+        </body>
+</html>

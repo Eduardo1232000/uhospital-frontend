@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+        <head>
+                <meta charset="UTF-8" />
+                <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                <title>UHospital - Admin</title>
+                <link
+                       rel="stylesheet"
+                       href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+                       integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+                       crossorigin="anonymous"
+               />
+        </head>
+        <body>
+                <nav class="navbar navbar-dark bg-dark mb-5">
+                        <a class="navbar-brand" href="#">
+                                <img
+                                       src="./assets/hospital.jpg"
+                                       width="30"
+                                       height="30"
+                                       class="d-inline-block align-top"
+                                       alt=""
+                               />
+                                UHospital
+                        </a>
+                </nav>
+                <div class="container">
+                        <div class="d-flex justify-content-end">
+                                <button 
+                                  id="go_admin" 
+                                  type="submit" 
+                                  class="btn btn-primary ">
+                                    back
+                                  </button>
+                              </div>
+                        <h1 class="text-center mb-5">Ver Enfermeras</h1>
+                        <p id="currentUser"></p>
+                        <h3>Enfermeras</h3>
+                        <div class="m-2">
+                                <span><input type="file" id="nurseFileInput" /></span>
+                                <span
+                                       ><button id="loadNurses" class="btn btn-success">
+                                                Cargar enfermeras
+                                        </button></span
+                               >
+                        </div>
+                        <div>
+                                <button id="getReport" class="btn btn-primary w-100 m-2">
+                                        Generar reporte en pdf
+                                </button>
+                        </div>
+                        <div class="d-flex flex-column" id="nurses"></div>
+                </div>
+                <script>
+                        //getting URL parameters
+                        const queryStrings = window.location.search;
+                        const urlParams = new URLSearchParams(queryStrings);
+                        const firstName = urlParams.get("first_name");
+                        const lastName = urlParams.get("last_name");
+ 
+                        //getting inputs
+                        let currentUser = document.getElementById("currentUser");
+                        let medicines = document.getElementById("nurses");
+                        let medicinesFileInput = document.getElementById("nursesFileInput");
+                        let loadMedicines = document.getElementById("loadNurses");
+                        let gerReport = document.getElementById("getReport");
+ 
+                        //getting nurses
+                        getNurse();
+                        function getNurse() {
+                                fetch("https://uhospitalipcb1.herokuapp.com/nurse")
+                                        .then((response) => response.json())
+                                        .then((data) => {
+                                                nurses.innerHTML = "";
+                                                data.forEach((nurse) => {
+                                                        let card = document.createElement("div");
+                                                        card.className = "card m-2";
+                                                        card.id = nurse.nickname;
+                                                        let cardBody = document.createElement("div");
+                                                        cardBody.className = "card-body";
+                                                        let nursenickname = document.createElement("h5");
+                                                        nursenickname.className = "card-title";
+                                                        nursenickname.innerText = nurse.first_name;
+                                                        let nurselast_name = document.createElement("p");
+                                                        nurselast_name.className = "card-subtitle";
+                                                        nurselast_name.innerText = "Apellido: " + nurse.last_name;
+
+                                                        let nursemodify = document.createElement("BUTTON");
+                                                        nursemodify.className = "btn btn-success w-100";
+                                                        nursemodify.innerText = "Modificar Enfermera";
+                                                        nursemodify.addEventListener("click", () => {
+                                                                        localStorage.setItem("nurse_user",nurse.nickname)
+                                                                        localStorage.setItem("nurse_password_user",nurse.password)
+                                                                        localStorage.setItem("nurse_first_name_user",nurse.first_name)
+                                                                        localStorage.setItem("nurse_last_name_user",nurse.last_name)
+                                                                        localStorage.setItem("nurse_date_user",nurse.date)
+                                                                        localStorage.setItem("nurse_gender_user",nurse.gender)
+                                                                        localStorage.setItem("nurse_phone_user",nurse.phone)
+                                                                        localStorage.setItem("nurse_specialty_user",nurse.specialty)
+                                                                window.location="modificar_datos_nurse admin.html";
+                                                        });
+                                                        
+                                                        let nurseDelete = document.createElement("BUTTON");
+                                                        nurseDelete.className = "btn btn-danger w-100";
+                                                        nurseDelete.innerText = "Eliminar Enfermera";
+                                                        nurseDelete.addEventListener("click", () => {
+                                                                fetch("https://uhospitalipcb1.herokuapp.com/nurse?nickname=" + nurse.nickname, {
+                                                                        method: "DELETE",
+                                                                })
+                                                                        .then((response) => response.json())
+                                                                        .then((data) => getNurse())
+                                                                        .catch((error) => console.error(error));
+                                                        });
+                                                        cardBody.appendChild(nursenickname);
+                                                        cardBody.appendChild(nurselast_name);
+                                                        cardBody.appendChild(nursemodify);
+                                                        cardBody.appendChild(nurseDelete);
+                                                        card.appendChild(cardBody);
+                                                        medicines.appendChild(card);
+                                                });
+                                        })
+                                        .catch((error) => console.error(error));
+                        }
+ 
+                        //loading medicines
+                        loadNurses.addEventListener("click", () => {
+                                let file = nurseFileInput.files[0];
+                                let reader = new FileReader();
+                                reader.readAsText(file);
+                                reader.onload = () => {
+                                        let data = reader.result;
+                                        let medicines = data.split("\n");
+                                        medicines = medicines.splice(1, medicines.length - 1);
+                                        medicines.forEach((medicine) => {
+                                                if (medicine !== "") {
+                                                        let medicineData = medicine.split(",");
+                                                        const newMedicine = {
+                                                                first_name: medicineData[0],
+                                                                last_name: medicineData[1],
+                                                                date: medicineData[2],
+                                                                gender: medicineData[3],
+                                                                nickname: medicineData[4],
+                                                                password: medicineData[5],
+                                                                phone: medicineData[6]
+                                                        };
+                                                        console.log(newMedicine);
+                                                        fetch("https://uhospitalipcb1.herokuapp.com/nurse", {
+                                                                method: "POST",
+                                                                headers: {
+                                                                        "content-type": "application/json",
+                                                                },
+                                                                body: JSON.stringify(newMedicine),
+                                                        })
+                                                                .then((response) => response.json())
+                                                                .then((data) => getNurse())
+                                                                .catch((error) => console.error(error));
+                                                }
+                                        });
+                                };
+                                reader.onerror = () => console.error(reader.error);
+                        });
+ 
+                        //generate pdf report
+                        getReport.addEventListener("click", () => {
+                                window.open("https://uhospitalipcb1.herokuapp.com/reports/nurse");
+                        });
+                </script>
+
+                <script>
+                        let log_out_Button = document.getElementById("go_admin");
+                        log_out_Button.addEventListener("click", (e) => {
+                
+                        window.location="admin.html";
+                        });
+                </script>
+                <script
+                       src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+                       integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+                       crossorigin="anonymous"
+               ></script>
+                <script
+                       src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+                       integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+                       crossorigin="anonymous"
+               ></script>
+                <script
+                       src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+                       integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+                       crossorigin="anonymous"
+               ></script>
+        </body>
+</html>

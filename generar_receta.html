@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UHospital</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+
+    
+    <script type="text/javascript" charset="utf8" src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.2.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  </head>
+<body>
+  <nav class="navbar navbar-dark bg-dark mb-5">
+    <a class="navbar-brand" href="#">
+      <img
+        src="./assets/hospital.jpg"
+        width="30"
+        height="30"
+        class="d-inline-block align-top"
+        alt=""
+      />
+      UHospital
+    </a>
+  </nav>
+
+
+      <script>
+        let usuario= localStorage.getItem("user")
+        let password_user= localStorage.getItem("password_user")
+        let first_name_user= localStorage.getItem("first_name_user")
+        let last_name_user= localStorage.getItem("last_name_user")
+        let date_user= localStorage.getItem("date_user")
+        let gender_user= localStorage.getItem("gender_user")
+        let phone_user= localStorage.getItem("phone_user")
+
+        
+        console.log(usuario)
+        console.log(password_user)
+        console.log(first_name_user)
+        console.log(last_name_user)
+        console.log(date_user)
+        console.log(gender_user)
+        console.log(phone_user)
+      </script>
+
+
+
+
+
+  
+  
+<div class="container" max-width=540px>
+  <div class="d-flex justify-content-end">
+    <button 
+      id="go_admin" 
+      type="submit" 
+      class="btn btn-primary ">
+        back
+      </button>
+  </div>
+  <div class="row">
+
+    <div class="col"></div>
+    <div class="col" >
+      <h1 class="text-center mb-5">
+        Generar Receta
+        </h1>
+      <form id= "modify_Form">
+        <div class="form-group">
+          <label for="fecha">Fecha</label>
+          <input type="date" 
+          required="required"
+          class="form-control" 
+          id="fecha" 
+          placeholder="Fecha">
+        </div>
+
+        <div class="form-group">
+          <label for="Hour">Nombre Paciente</label>
+          <input type="text" 
+          required="required"
+          class="form-control" 
+          id="paciente" 
+          placeholder="Enter your last name">
+        </div>
+
+        <div class="form-group">
+          <label for="reason">Padecimiento</label>
+          <input type="text" 
+          required="required"
+          class="form-control" 
+          id="padecimiento" 
+          placeholder="Enter your date">
+        </div>
+
+        <div class="form-group">
+          <label for="descripcion">Descripcion</label>
+          <textarea class="form-control" 
+          id="descripcion" rows="3"></textarea>
+        
+        </div>
+
+      
+
+        <button 
+        id="generar" 
+        type="submit" 
+        class="btn btn-success w-100">
+          Generar
+        </button>
+
+        
+        <br><br>
+
+        
+      </form>
+      <div>
+        <button 
+        id="reporte" 
+        type="submit" 
+        class="btn btn-primary w-100">
+          Generar reporte
+        </button>
+      </div>
+      </div>
+      
+      
+      <div class="col"></div>
+      
+      </div>
+
+      </div>
+
+
+
+  
+      
+
+
+
+
+
+    <script>
+      let modify_Form = document.getElementById("modify_Form");
+      let fechaInput = document.getElementById("fecha");
+      let pacienteInput = document.getElementById("paciente");
+      let padecimientoInput = document.getElementById("padecimiento")
+      let descripcionInput = document.getElementById("descripcion")
+      let generarButton = document.getElementById("generar");
+      modify_Form.addEventListener("submit", (e) => {
+        e.preventDefault();
+      });
+      generarButton.addEventListener("click", (e) => {
+        console.log(fechaInput, pacienteInput, usuario, padecimientoInput, descripcionInput);
+
+          fetch("https://uhospitalipcb1.herokuapp.com/receta", {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify({
+            fecha: fechaInput.value,
+            paciente: pacienteInput.value,
+            doctor: usuario,
+            padecimiento: padecimientoInput.value,
+            descripcion: descripcionInput.value,
+          }),
+        })
+        
+        
+          .then((response) => response.json())
+          .then((data) => {
+
+
+            if (data.message=="No se ha podido generar la receta") {
+              alert("No se ha podido generar la receta")
+            } else {
+              alert("La receta ha sido creada exitosamente")
+              
+                fetch("https://uhospitalipcb1.herokuapp.com/consulta", {
+                method: "PUT",
+                headers: {
+                  "content-type": "application/json",
+                },
+                body: JSON.stringify({
+                  nickname: cita_nickname,
+                  date: cita_date,
+                  hour: cita_hour,
+                  reason: cita_reason,
+                  estado:"completada",
+                  doctor: usuario
+                }),
+              })
+                                                                        
+                                                                        
+                .then((response) => response.json())
+                .then((data) => {
+                window.location="listado_citas.html";
+                  })
+            }
+
+
+          })
+          .catch((error) => console.error(error));
+       
+      });
+    </script>
+
+    <script>
+      let log_out_Button = document.getElementById("go_admin");
+      log_out_Button.addEventListener("click", (e) => {
+    
+      window.location="listado_citas.html";
+      });
+    </script>
+
+<script>
+  let reporteButton = document.getElementById("reporte");
+
+  reporteButton.addEventListener("click", (e) => {
+  console.log(fechaInput.value, pacienteInput.value, usuario,padecimientoInput.value, descripcionInput.value)
+  alert("hola")
+  fetch("https://uhospitalipcb1.herokuapp.com/recetareporte", {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify({
+            numero: "1",
+            fecha: fechaInput.value,
+            paciente: pacienteInput.value,
+            doctor: usuario,
+            padecimiento: padecimientoInput.value,
+            descripcion: descripcionInput.value
+          }),
+        })
+        
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.message =="Ya genero un reporte") {
+              console.error(data);
+            } else {
+              
+              window.open("https://uhospitalipcb1.herokuapp.com/reports/recetareporte");
+              alert("Reporte Creado")
+              fetch("https://uhospitalipcb1.herokuapp.com/recetareporte?numero=1", {
+                method: "DELETE",
+              })
+              .then((response) => response.json())
+              .catch((error) => console.error(error));
+              
+            }
+          })
+          .catch((error) => console.error(error));
+  });
+</script>
+<script>
+  let cita_doctor= localStorage.getItem("cita_doctor")
+  console.log(cita_doctor)
+</script>
+
+<script>
+  let cita_nickname= localStorage.getItem("cita_nickname")
+  let cita_date= localStorage.getItem("cita_date")
+  let cita_hour= localStorage.getItem("cita_hour")
+  let cita_reason= localStorage.getItem("cita_reason")
+
+  
+  console.log(cita_nickname)
+  console.log(cita_date)
+  console.log(cita_hour)
+  console.log(cita_reason)
+
+</script>
+
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+      integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+      integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+      crossorigin="anonymous"
+    ></script>
+</body>
+</html>

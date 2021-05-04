@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+        <head>
+                <meta charset="UTF-8" />
+                <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                <title>UHospital - Admin</title>
+                <link
+                       rel="stylesheet"
+                       href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+                       integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+                       crossorigin="anonymous"
+               />
+        </head>
+        <body>
+                <nav class="navbar navbar-dark bg-dark mb-5">
+                        <a class="navbar-brand" href="#">
+                                <img
+                                       src="./assets/hospital.jpg"
+                                       width="30"
+                                       height="30"
+                                       class="d-inline-block align-top"
+                                       alt=""
+                               />
+                                UHospital
+                        </a>
+                </nav>
+                <div class="container">
+                        <div class="d-flex justify-content-end">
+                                <button 
+                                  id="go_admin" 
+                                  type="submit" 
+                                  class="btn btn-primary ">
+                                    back
+                                  </button>
+                              </div>
+                        <h1 class="text-center mb-5">Asigna un Doctor</h1>
+                        <p id="currentUser"></p>
+
+                        <div class="d-flex flex-column" id="doctors"></div>
+                </div>
+                <script>
+                        //getting URL parameters
+                        const queryStrings = window.location.search;
+                        const urlParams = new URLSearchParams(queryStrings);
+                        const firstName = urlParams.get("first_name");
+                        const lastName = urlParams.get("last_name");
+ 
+                        //getting inputs
+                        let currentUser = document.getElementById("currentUser");
+                        let doctors = document.getElementById("doctors");
+
+ 
+                        //getting doctors
+                        getDoctor();
+                        function getDoctor() {
+                                fetch("https://uhospitalipcb1.herokuapp.com/doctor")
+                                        .then((response) => response.json())
+                                        .then((data) => {
+                                                doctors.innerHTML = "";
+                                                data.forEach((doctor) => {
+                                                        let button = document.createElement("div");
+                                                        button.className = "list-group-item list-group-item-action";
+                                                        card.id = doctor.nickname;
+                                                        let cardBody = document.createElement("div");
+                                                        cardBody.className = "card-body";
+                                                        let doctornickname = document.createElement("h5");
+                                                        doctornickname.className = "list-group-item list-group-item-action";
+                                                        doctornickname.innerText = doctor.first_name;
+                                                
+                                                        let doctormodify = document.createElement("BUTTON");
+                                                        doctormodify.className = "btn btn-success w-100";
+                                                        doctormodify.innerText = "Seleccionar Doctor";
+                                                        doctormodify.addEventListener("click", () => {
+                                                                fetch("https://uhospitalipcb1.herokuapp.com/consulta", {
+                                                                        method: "PUT",
+                                                                        headers: {
+                                                                        "content-type": "application/json",
+                                                                        },
+                                                                        body: JSON.stringify({
+                                                                        nickname: cita_nickname,
+                                                                        date: cita_date,
+                                                                        hour: cita_hour,
+                                                                        reason: cita_reason,
+                                                                        estado:"aceptada",
+                                                                        doctor: doctor.nickname
+                                                                        }),
+                                                                })
+                                                                        
+                                                                        
+                                                                        .then((response) => response.json())
+                                                                        .then((data) => {
+                                                                                window.location="citas_pendientes.html";
+                                                                        })
+
+                                                                        
+                                                                
+                                                        });
+
+
+                                                        button.appendChild(doctornickname);
+                                                        button.appendChild(doctormodify);
+
+                                                        button.appendChild(cardBody);
+                                                        doctors.appendChild(button);
+                                                });
+                                        })
+                                        .catch((error) => console.error(error));
+                        }
+ 
+                      
+                </script>
+
+                <script>
+                        let cita_nickname= localStorage.getItem("cita_nickname")
+                        let cita_date= localStorage.getItem("cita_date")
+                        let cita_hour= localStorage.getItem("cita_hour")
+                        let cita_reason= localStorage.getItem("cita_reason")
+
+                        
+                        console.log(cita_nickname)
+                        console.log(cita_date)
+                        console.log(cita_hour)
+                        console.log(cita_reason)
+
+                </script>
+                <script>
+                        let log_out_Button = document.getElementById("go_admin");
+                        log_out_Button.addEventListener("click", (e) => {
+                       
+                        window.location="citas_pendientes.html";
+                        });
+                </script>
+
+                <script
+                       src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+                       integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+                       crossorigin="anonymous"
+               ></script>
+                <script
+                       src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+                       integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+                       crossorigin="anonymous"
+               ></script>
+                <script
+                       src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+                       integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+                       crossorigin="anonymous"
+               ></script>
+        </body>
+</html>

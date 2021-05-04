@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UHospital</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+
+    
+    <script type="text/javascript" charset="utf8" src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.2.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  </head>
+  <body>
+    <nav class="navbar navbar-dark bg-dark mb-5">
+      <a class="navbar-brand" href="#">
+        <img
+          src="./assets/hospital.jpg"
+          width="30"
+          height="30"
+          class="d-inline-block align-top"
+          alt=""
+        />
+        UHospital
+      </a>
+    </nav>
+
+    <div class="d-flex justify-content-end">
+      <button 
+        id="log_out" 
+        type="submit" 
+        class="btn btn-primary ">
+          Log out
+        </button>
+    </div>
+
+    <h1 class="text-center mb-5">
+      Administracion
+    </h1>
+
+
+    <ul class="nav nav-tabs" id="tab_users" role="tablist">
+      <li class="nav-item">
+        <a class="nav-link active" id="patients-tab" data-toggle="tab" href="#patients" role="tab" aria-controls="patients" aria-selected="true">Patients</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="doctor-tab" data-toggle="tab" href="#doctor" role="tab" aria-controls="doctor" aria-selected="false">Doctor</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="nurse-tab" data-toggle="tab" href="#nurse" role="tab" aria-controls="nurse" aria-selected="false">Nurse</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="medicine-tab" data-toggle="tab" href="#medicine" role="tab" aria-controls="medicine" aria-selected="false">Medicine</a>
+      </li>
+    </ul>
+    <br><br><br><br><br><br><br>
+    <div class="tab-content" id="myTabContent">
+      <div class="tab-pane fade show active" id="patients" role="tabpanel" aria-labelledby="patients-tab">
+        <div class="row"> 
+          
+          <div class="col">
+            <h1 class="text-center mb-5">
+              <button 
+            id="load_patient" 
+            type="submit" 
+            class="btn btn-primary w-50">
+            
+            
+            add and view patients
+            </button>
+            <br><br>
+            <img src="./assets/addpatients.png" alt="" width="240" height="210" >
+            </h1>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-pane fade" id="doctor" role="tabpanel" aria-labelledby="doctor-tab">
+        <div class="row"> 
+          
+          <div class="col">
+            <h1 class="text-center mb-5">
+              <button 
+            id="load_doctor" 
+            type="submit" 
+            class="btn btn-primary w-50">
+            add and view doctors
+            </button>
+            <br><br>
+            <img src="./assets/adddoctor.jpg" alt="" width="200" height="210" >
+            </h1>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-pane fade" id="nurse" role="tabpanel" aria-labelledby="nurse-tab">
+        <div class="row"> 
+          
+          <div class="col">
+            <h1 class="text-center mb-5">
+              <button 
+            id="load_nurse" 
+            type="submit" 
+            class="btn btn-primary w-50">
+            add and view nurses
+            </button>
+            <br><br>
+            <img src="./assets/addnurse.png" alt="" width="200" height="210" >
+            </h1>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-pane fade" id="medicine" role="tabpanel" aria-labelledby="medicine-tab">
+        <div class="row">
+          <div class="col">
+            <h1 class="text-center mb-5">
+              <button 
+            id="load_medicine" 
+            type="submit" 
+            class="btn btn-primary w-50">
+            add and view medicine
+            </button>
+            <br><br>
+            <img src="./assets/addmedicine.png" alt="" width="250" height="210" >
+            </h1>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+
+
+
+
+
+    <script>
+      let load_patient_Button = document.getElementById("load_patient");
+      load_patient_Button.addEventListener("click", (e) => {
+        window.location="ver_pacientes.html";
+      });
+    </script>
+
+    <script>
+      let load_doctor_Button = document.getElementById("load_doctor");
+      load_doctor_Button.addEventListener("click", (e) => {
+        window.location="ver_doctores.html";
+      });
+    </script>
+
+    <script>
+      let load_nurse_Button = document.getElementById("load_nurse");
+      load_nurse_Button.addEventListener("click", (e) => {
+        window.location="ver_enfermeras.html";
+      });
+    </script>
+
+    <script>
+      let load_medicine_Button = document.getElementById("load_medicine");
+      load_medicine_Button.addEventListener("click", (e) => {
+        window.location="ver_medicinas.html";
+      });
+    </script>
+
+    <script>
+      let usuario= localStorage.getItem("user")
+      let password_user= localStorage.getItem("password_user")
+      let first_name_user= localStorage.getItem("first_name_user")
+      let last_name_user= localStorage.getItem("last_name_user")
+      console.log(usuario)
+      console.log(password_user)
+      console.log(first_name_user)
+      console.log(last_name_user)
+    </script>
+
+<script>
+  let log_out_Button = document.getElementById("log_out");
+  log_out_Button.addEventListener("click", (e) => {
+    localStorage.setItem("user","")
+    localStorage.setItem("password_user","")
+    localStorage.setItem("first_name_user","")
+    localStorage.setItem("last_name_user","")
+    localStorage.setItem("date_user","")
+    localStorage.setItem("gender_user","")
+    localStorage.setItem("phone_user","")
+    alert("Good bye")
+    window.location="index.html";
+  });
+</script>
+    
+
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+      integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+      integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>

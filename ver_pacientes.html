@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+        <head>
+                <meta charset="UTF-8" />
+                <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                <title>UHospital - Admin</title>
+                <link
+                       rel="stylesheet"
+                       href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+                       integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+                       crossorigin="anonymous"
+               />
+        </head>
+        <body>
+                <nav class="navbar navbar-dark bg-dark mb-5">
+                        <a class="navbar-brand" href="#">
+                                <img
+                                       src="./assets/hospital.jpg"
+                                       width="30"
+                                       height="30"
+                                       class="d-inline-block align-top"
+                                       alt=""
+                               />
+                                UHospital
+                        </a>
+                </nav>
+                <div class="container">
+                        <div class="d-flex justify-content-end">
+                                <button 
+                                  id="go_admin" 
+                                  type="submit" 
+                                  class="btn btn-primary ">
+                                    back
+                                  </button>
+                              </div>
+                        <h1 class="text-center mb-5">Ver Pacientes</h1>
+                        <p id="currentUser"></p>
+                        <h3>Pacientes</h3>
+                        <div class="m-2">
+                                <span><input type="file" id="patientFileInput" /></span>
+                                <span
+                                       ><button id="loadPatient" class="btn btn-success">
+                                                Cargar pacientes
+                                        </button></span
+                               >
+                        </div>
+                        <div>
+                                <button id="getReport" class="btn btn-primary w-100 m-2">
+                                        Generar reporte en pdf
+                                </button>
+                        </div>
+                        <div class="d-flex flex-column" id="patients"></div>
+                </div>
+                <script>
+                        //getting URL parameters
+                        const queryStrings = window.location.search;
+                        const urlParams = new URLSearchParams(queryStrings);
+                        const firstName = urlParams.get("first_name");
+                        const lastName = urlParams.get("last_name");
+ 
+                        //getting inputs
+                        let currentUser = document.getElementById("currentUser");
+                        let patients = document.getElementById("patients");
+                        let patientFileInput = document.getElementById("patientFileInput");
+                        let loadPatients = document.getElementById("loadPatient");
+                        let getReport = document.getElementById("getReport");
+ 
+                        //getting patients
+                        getPatient();
+                        function getPatient() {
+                                fetch("https://uhospitalipcb1.herokuapp.com/patient")
+                                        .then((response) => response.json())
+                                        .then((data) => {
+                                                patients.innerHTML = "";
+                                                data.forEach((patient) => {
+                                                        let card = document.createElement("div");
+                                                        card.className = "card m-2";
+                                                        card.id = patient.nickname;
+                                                        let cardBody = document.createElement("div");
+                                                        cardBody.className = "card-body";
+                                                        let patientnickname = document.createElement("h5");
+                                                        patientnickname.className = "card-title";
+                                                        patientnickname.innerText = patient.first_name;
+                                                        let patientlast_name = document.createElement("p");
+                                                        patientlast_name.className = "card-subtitle";
+                                                        patientlast_name.innerText = "Apellido: " + patient.last_name;
+
+                                                        let patientmodify = document.createElement("BUTTON");
+                                                        patientmodify.className = "btn btn-success w-100";
+                                                        patientmodify.innerText = "Modificar Paciente";
+                                                        patientmodify.addEventListener("click", () => {
+                                                                        localStorage.setItem("patient_user",patient.nickname)
+                                                                        localStorage.setItem("patient_password_user",patient.password)
+                                                                        localStorage.setItem("patient_first_name_user",patient.first_name)
+                                                                        localStorage.setItem("patient_last_name_user",patient.last_name)
+                                                                        localStorage.setItem("patient_date_user",patient.date)
+                                                                        localStorage.setItem("patient_gender_user",patient.gender)
+                                                                        localStorage.setItem("patient_phone_user",patient.phone)
+                                                                window.location="modificar_datos_patient admin .html";
+                                                        });
+                                                       
+                                                        let patientDelete = document.createElement("BUTTON");
+                                                        patientDelete.className = "btn btn-danger w-100";
+                                                        patientDelete.innerText = "Eliminar Paciente";
+                                                        patientDelete.addEventListener("click", () => {
+                                                                fetch("https://uhospitalipcb1.herokuapp.com/patient?nickname=" + patient.nickname, {
+                                                                        method: "DELETE",
+                                                                })
+                                                                        .then((response) => response.json())
+                                                                        .then((data) => getPatient())
+                                                                        .catch((error) => console.error(error));
+                                                        });
+                                                        cardBody.appendChild(patientnickname);
+                                                        cardBody.appendChild(patientlast_name);
+                                                        cardBody.appendChild(patientmodify);
+                                                        cardBody.appendChild(patientDelete);
+                                                        card.appendChild(cardBody);
+                                                        patients.appendChild(card);
+                                                });
+                                        })
+                                        .catch((error) => console.error(error));
+                        }
+ 
+                        //loading medicines
+                        loadPatient.addEventListener("click", () => {
+                                let file = patientFileInput.files[0];
+                                let reader = new FileReader();
+                                reader.readAsText(file);
+                                reader.onload = () => {
+                                        let data = reader.result;
+                                        let medicines = data.split("\n");
+                                        medicines = medicines.splice(1, medicines.length - 1);
+                                        medicines.forEach((medicine) => {
+                                                if (medicine !== "") {
+                                                        let medicineData = medicine.split(",");
+                                                        const newMedicine = {
+                                                                first_name: medicineData[0],
+                                                                last_name: medicineData[1],
+                                                                date: medicineData[2],
+                                                                gender: medicineData[3],
+                                                                nickname: medicineData[4],
+                                                                password: medicineData[5],
+                                                                phone: medicineData[6]
+                                                        };
+                                                        console.log(newMedicine);
+                                                        fetch("https://uhospitalipcb1.herokuapp.com/signup", {
+                                                                method: "POST",
+                                                                headers: {
+                                                                        "content-type": "application/json",
+                                                                },
+                                                                body: JSON.stringify(newMedicine),
+                                                        })
+                                                                .then((response) => response.json())
+                                                                .then((data) => getPatient())
+                                                                .catch((error) => console.error(error));
+                                                }
+                                        });
+                                };
+                                reader.onerror = () => console.error(reader.error);
+                        });
+ 
+                        //generate pdf report
+                        getReport.addEventListener("click", () => {
+                                window.open("https://uhospitalipcb1.herokuapp.com/reports/patient");
+                        });
+                </script>
+
+                <script>
+                        let log_out_Button = document.getElementById("go_admin");
+                        log_out_Button.addEventListener("click", (e) => {
+
+                        window.location="admin.html";
+                        });
+                </script>
+                <script
+                       src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+                       integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+                       crossorigin="anonymous"
+               ></script>
+                <script
+                       src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+                       integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+                       crossorigin="anonymous"
+               ></script>
+                <script
+                       src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+                       integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+                       crossorigin="anonymous"
+               ></script>
+        </body>
+</html>
+</html>

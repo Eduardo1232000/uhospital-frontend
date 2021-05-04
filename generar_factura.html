@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UHospital</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+
+    
+    <script type="text/javascript" charset="utf8" src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.2.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  </head>
+<body>
+  <nav class="navbar navbar-dark bg-dark mb-5">
+    <a class="navbar-brand" href="#">
+      <img
+        src="./assets/hospital.jpg"
+        width="30"
+        height="30"
+        class="d-inline-block align-top"
+        alt=""
+      />
+      UHospital
+    </a>
+  </nav>
+
+
+      <script>
+        let usuario= localStorage.getItem("user")
+        let password_user= localStorage.getItem("password_user")
+        let first_name_user= localStorage.getItem("first_name_user")
+        let last_name_user= localStorage.getItem("last_name_user")
+        let date_user= localStorage.getItem("date_user")
+        let gender_user= localStorage.getItem("gender_user")
+        let phone_user= localStorage.getItem("phone_user")
+
+        
+        console.log(usuario)
+        console.log(password_user)
+        console.log(first_name_user)
+        console.log(last_name_user)
+        console.log(date_user)
+        console.log(gender_user)
+        console.log(phone_user)
+      </script>
+
+
+
+
+
+  
+  
+<div class="container" max-width=540px>
+  <div class="d-flex justify-content-end">
+    <button 
+      id="go_admin" 
+      type="submit" 
+      class="btn btn-primary ">
+        back
+      </button>
+  </div>
+  <div class="row">
+
+    <div class="col"></div>
+    <div class="col" >
+      <h1 class="text-center mb-5">
+        Generar Factura
+        </h1>
+      <form id= "modify_Form">
+        <div class="form-group">
+          <label for="fecha">Fecha</label>
+          <input type="date" 
+          required="required"
+          class="form-control" 
+          id="fecha" 
+          placeholder="Fecha">
+        </div>
+
+        <div class="form-group">
+          <label for="Hour">Paciente</label>
+          <input type="text" 
+          required="required"
+          class="form-control" 
+          id="paciente" 
+          placeholder="Enter your last name">
+        </div>
+
+        <div class="form-group">
+          <label for="reason">Doctor</label>
+          <input type="text" 
+          required="required"
+          class="form-control" 
+          id="doctor" 
+          placeholder="Enter your date">
+        </div>
+
+        <div class="form-group">
+          <label for="precio_consulta">Precio Consulta</label>
+          <input type="text" 
+          required="required"
+          class="form-control" 
+          id="precio_consulta" 
+          placeholder="Enter your date">
+        </div>
+
+        <div class="form-group">
+          <label for="costo_operacion">Costo operacion</label>
+          <input type="text" 
+          required="required"
+          class="form-control" 
+          id="costo_operacion" 
+          placeholder="Enter your date">
+        </div>
+
+        <div class="form-group">
+          <label for="costo_internado">Costo internado</label>
+          <input type="text" 
+          required="required"
+          class="form-control" 
+          id="costo_internado" 
+          placeholder="Enter your date">
+        </div>
+
+        <div class="form-group">
+          <label for="total">Total</label>
+          <input type="text" 
+          required="required"
+          class="form-control" 
+          id="total" 
+          placeholder="Enter your date">
+        </div>
+
+        <button 
+        id="generar" 
+        type="submit" 
+        class="btn btn-success w-100">
+          Generar
+        </button>
+
+
+        <br><br><br><br>
+      </form>
+      </div>
+      
+      <div class="col"></div>
+      </div>
+
+      </div>
+
+
+
+  
+      
+
+
+
+
+
+    <script>
+      let modify_Form = document.getElementById("modify_Form");
+      let fechaInput = document.getElementById("fecha");
+      let pacienteInput = document.getElementById("paciente");
+      let doctorInput = document.getElementById("doctor")
+      let precio_consultaInput = document.getElementById("precio_consulta")
+      let costo_operacionInput = document.getElementById("costo_operacion")
+      let costo_internadoInput = document.getElementById("costo_internado")
+      let totalInput = document.getElementById("total")
+      let generarButton = document.getElementById("generar");
+      modify_Form.addEventListener("submit", (e) => {
+        e.preventDefault();
+      });
+      generarButton.addEventListener("click", (e) => {
+        console.log(fechaInput, pacienteInput, doctorInput, precio_consultaInput, costo_operacionInput, costo_internadoInput, totalInput);
+
+          fetch("https://uhospitalipcb1.herokuapp.com/factura", {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify({
+            fecha: fechaInput.value,
+            paciente: pacienteInput.value,
+            doctor: doctorInput.value,
+            precio_consulta: precio_consultaInput.value,
+            costo_operacion: costo_operacionInput.value,
+            costo_internado: costo_internadoInput.value,
+            total: totalInput.value
+          }),
+        })
+        
+        
+          .then((response) => response.json())
+          .then((data) => {
+
+
+            if (data.message=="No se ha podido generar la factura") {
+              alert("No se ha podido generar la factura")
+            } else {
+              alert("La factura ha sido creada exitosamente")
+              
+              window.location = "nurse.html";
+            }
+
+
+          })
+          .catch((error) => console.error(error));
+
+
+          
+       
+      });
+    </script>
+
+    <script>
+      let log_out_Button = document.getElementById("go_admin");
+      log_out_Button.addEventListener("click", (e) => {
+    
+      window.location="paciente.html";
+      });
+    </script>
+
+
+
+
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+      integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+      integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+      crossorigin="anonymous"
+    ></script>
+</body>
+</html>

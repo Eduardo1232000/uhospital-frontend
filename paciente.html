@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UHospital</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+
+    
+    <script type="text/javascript" charset="utf8" src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.2.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  </head>
+<body>
+  <nav class="navbar navbar-dark bg-dark mb-1">
+    <a class="navbar-brand" href="#">
+      <img
+        src="./assets/hospital.jpg"
+        width="30"
+        height="30"
+        class="d-inline-block align-top"
+        alt=""
+      />
+      UHospital
+    </a>
+  </nav>
+
+  <div class="d-flex justify-content-end">
+    <button 
+      id="log_out" 
+      type="submit" 
+      class="btn btn-primary ">
+        Log out
+      </button>
+  </div>
+
+  <h1 class="text-center mb-5">Bienvenido
+      <script>
+        let usuario= localStorage.getItem("user")
+        let password_user= localStorage.getItem("password_user")
+        let first_name_user= localStorage.getItem("first_name_user")
+        let last_name_user= localStorage.getItem("last_name_user")
+        let date_user= localStorage.getItem("date_user")
+        let gender_user= localStorage.getItem("gender_user")
+        let phone_user= localStorage.getItem("phone_user")
+        document.write(usuario)
+        console.log(usuario)
+        console.log(password_user)
+        console.log(first_name_user)
+        console.log(last_name_user)
+        console.log(date_user)
+        console.log(gender_user)
+        console.log(phone_user)
+      </script>
+
+    
+
+
+
+
+  </h1>
+  <h2>Que deseas hacer:</h2>
+  <br><br><br><br>
+  <div class="row"> 
+    <div class="col">
+
+      <h1 class="text-center mb-5">
+        <button 
+      id="solicitar_cita" 
+      type="submit" 
+      class="btn btn-primary w-50">
+        Solicitar una cita
+      </button>
+      <br><br>
+      <img src="./assets/solicitud.jpg" alt="" width="170" height="170" >
+      </h1>
+    </div>
+
+    <div class="col">
+      <h1 class="text-center mb-5">
+        <button 
+      id="modificar_datos" 
+      type="submit" 
+      class="btn btn-primary w-50">
+        Modificar datos personales
+      </button>
+      <br><br>
+      <img src="./assets/datos_personales.png" alt="" width="140" height="170" >
+      </h1>
+    </div>
+
+    <div class="col">
+      <h1 class="text-center mb-5">
+      <button 
+    id="tienda" 
+    type="submit" 
+    class="btn btn-primary w-50">
+      ir a tienda
+    </button>
+    <br><br>
+    <img src="./assets/tienda.png" alt="" width="200" height="170" >
+    </h1>
+    </div>
+    <div class="col">
+      <h1 class="text-center mb-5">
+      <button 
+    id="todas_consultas" 
+    type="submit" 
+    class="btn btn-primary w-50">
+    Ver Todas las consultas
+    
+    </button>
+    <br><br>
+    <img src="./assets/todas_consultas.png" alt="" width="200" height="170" >
+    </h1>
+    </div>
+  </div>
+
+
+
+
+
+
+  
+  <script>
+    let solicitar_cita_Button = document.getElementById("solicitar_cita");
+    solicitar_cita_Button.addEventListener("click", (e) => {
+      window.location="solicitar_cita.html";
+    });
+  </script>
+
+<script>
+  let modificar_datos_Button = document.getElementById("modificar_datos");
+  modificar_datos_Button.addEventListener("click", (e) => {
+    window.location="modificar_datos.html";
+  });
+</script>
+
+<script>
+  let tienda_Button = document.getElementById("tienda");
+  tienda_Button.addEventListener("click", (e) => {
+    window.location="tienda.html";
+  });
+</script>
+
+<script>
+  let todas_consultas_Button = document.getElementById("todas_consultas");
+  todas_consultas_Button.addEventListener("click", (e) => {
+    window.location="todas_consultas.html";
+  });
+</script>
+
+<script>
+  let log_out_Button = document.getElementById("log_out");
+  log_out_Button.addEventListener("click", (e) => {
+    localStorage.setItem("user","")
+    localStorage.setItem("password_user","")
+    localStorage.setItem("first_name_user","")
+    localStorage.setItem("last_name_user","")
+    localStorage.setItem("date_user","")
+    localStorage.setItem("gender_user","")
+    localStorage.setItem("phone_user","")
+    alert("Good bye")
+    window.location="index.html";
+  });
+</script>
+
+
+
+
+
+
+
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+      integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+      integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+      crossorigin="anonymous"
+    ></script>
+</body>
+</html>
